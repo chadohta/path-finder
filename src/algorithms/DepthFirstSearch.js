@@ -3,11 +3,14 @@ import { getUnvisitedNeighbors } from './Dijkstras';
 export function dfs(grid, startNode, finishNode) {
     let stack = [];
     stack.push(startNode);
-
     const visitedNodesInOrder = [];
 
     while (stack.length > 0) {
         let currentNode = stack.pop();
+
+        // skip node if it's a wall
+        if (currentNode.isWall) continue;
+
         currentNode.isVisited = true;
         visitedNodesInOrder.push(currentNode);
 
@@ -21,4 +24,6 @@ export function dfs(grid, startNode, finishNode) {
             }
         }
     }
+    // finish node was not found and therefore we must be trapped by walls
+    return visitedNodesInOrder;
 }

@@ -4,6 +4,8 @@ import GridNode from './GridNode'
 import { dijkstra, getNodesInShortestPathOrder } from '../algorithms/Dijkstras';
 import { dfs } from '../algorithms/DepthFirstSearch';
 import { bfs } from '../algorithms/BreadthFirstSearch';
+import { greedySearch } from '../algorithms/GreedySearch';
+import { aStarSearch } from '../algorithms/AStarSearch';
 
 const START_NODE_ROW = 5;
 const START_NODE_COL = 5;
@@ -13,6 +15,7 @@ const END_NODE_COL = 35;
 class PathFindingVisualizer extends Component {
     state = {
         grid: [],
+        mouseIsPressed: false,
     };
     
     componentDidMount() {
@@ -38,11 +41,38 @@ class PathFindingVisualizer extends Component {
             col: col,
             row: row,
             distance: Infinity,
-            isVisited: false,
             previousNode: null,
             isStart: row === START_NODE_ROW && col === START_NODE_COL,
-            isFinish: row === END_NODE_ROW && col === END_NODE_COL
+            isFinish: row === END_NODE_ROW && col === END_NODE_COL,
+            isWall: false,
+            isVisited: false,
         };
+    };
+
+    handleMouseDown(row, col) {
+        const newGrid = this.getNewGridWithWallToggled(this.state.grid, row, col);
+        this.setState({ grid: newGrid, mouseIsPressed: true });
+    }
+
+    handleMouseEnter(row, col) {
+        if (!this.state.mouseIsPressed) return;
+        const newGrid = this.getNewGridWithWallToggled(this.state.grid, row, col);
+        this.setState({ grid: newGrid });
+    }
+
+    handleMouseUp() {
+        this.setState({ mouseIsPressed: false });
+    }
+
+    getNewGridWithWallToggled(grid, row, col) {
+        const newGrid = grid.slice();
+        const node = newGrid[row][col];
+        const newNode = {
+            ...node,
+            isWall: !node.isWall,
+        };
+        newGrid[row][col] = newNode;
+        return newGrid;
     };
     
     visualizeDijkstra() {
@@ -50,6 +80,7 @@ class PathFindingVisualizer extends Component {
         const startNode = grid[START_NODE_ROW][START_NODE_COL];
         const finishNode = grid[END_NODE_ROW][END_NODE_COL];
         const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+        console.log(visitedNodesInOrder);
         const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
         this.animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, 30);
     }
@@ -72,20 +103,22 @@ class PathFindingVisualizer extends Component {
     }
 
     visualizeGreedy() {
-        // const { grid } = this.state;
-        // const startNode = grid[START_NODE_ROW][START_NODE_COL];
-        // const finishNode = grid[END_NODE_ROW][END_NODE_COL];
-        // const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
-        // const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-        // this.animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, 30);
+        const { grid } = this.state;
+        const startNode = grid[START_NODE_ROW][START_NODE_COL];
+        const finishNode = grid[END_NODE_ROW][END_NODE_COL];
+        const visitedNodesInOrder = greedySearch(grid, startNode, finishNode);
+        const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+        this.animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, 30);
     }
 
     visualizeAStar() {
-        // const { grid } = this.state;
-        // const startNode = grid[START_NODE_ROW][START_NODE_COL];
-        // const finishNode = grid[END_NODE_ROW][END_NODE_COL];
-        // const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
+        const { grid } = this.state;
+        const startNode = grid[START_NODE_ROW][START_NODE_COL];
+        const finishNode = grid[END_NODE_ROW][END_NODE_COL];
+        const visitedNodesInOrder = aStarSearch(grid, startNode, finishNode);
+        console.log(visitedNodesInOrder);
         // const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+        // console.log(nodesInShortestPathOrder);
         // this.animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, 30);
     }
 
@@ -141,7 +174,7 @@ class PathFindingVisualizer extends Component {
     }
 
     render() { 
-        const { grid } = this.state;
+        const { grid,  mouseIsPressed } = this.state;
 
         return ( 
             <div>
@@ -168,14 +201,19 @@ class PathFindingVisualizer extends Component {
                         return (
                             <div key={rIndex}>
                                 {row.map((node, nIndex) => { 
-                                    const {row, col, isStart, isFinish} = node;
+                                    const {row, col, isStart, isFinish, isWall} = node;
                                     return (
                                         <GridNode
                                             key={nIndex}
                                             col={col}
                                             row={row}
                                             isStart={isStart}
-                                            isFinish={isFinish}>
+                                            isFinish={isFinish}
+                                            isWall={isWall}
+                                            mouseIsPressed={mouseIsPressed}
+                                            onMouseDown={(row, col) => this.handleMouseDown(row, col)}
+                                            onMouseEnter={(row, col) => this.handleMouseEnter(row, col)}
+                                            onMouseUp={() => this.handleMouseUp()}>
                                         </GridNode>
                                     );
                                 })}

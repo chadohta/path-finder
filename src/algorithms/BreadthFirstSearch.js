@@ -1,6 +1,5 @@
 import { getUnvisitedNeighbors } from './Dijkstras';
 
-
 export function bfs(grid, startNode, finishNode) {
     let queue = [];
     queue.push(startNode);
@@ -10,8 +9,11 @@ export function bfs(grid, startNode, finishNode) {
 
     while (queue.length > 0) {
         let currentNode = queue.shift();
-        visitedNodesInOrder.push(currentNode);
 
+        // skip node if it's a wall
+        if (currentNode.isWall) continue;
+        
+        visitedNodesInOrder.push(currentNode);
         if (currentNode === finishNode) return visitedNodesInOrder;
         const unvisitedNeighbors = getUnvisitedNeighbors(currentNode, grid);
         for (const neighbor of unvisitedNeighbors) {
@@ -20,4 +22,6 @@ export function bfs(grid, startNode, finishNode) {
             queue.push(neighbor);
         }
     }
+    // finish node was not found and therefore we must be trapped by walls
+    return visitedNodesInOrder;
 }
