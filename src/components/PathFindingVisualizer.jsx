@@ -41,6 +41,7 @@ class PathFindingVisualizer extends Component {
             col: col,
             row: row,
             distance: Infinity,
+            fScore: Infinity,
             previousNode: null,
             isStart: row === START_NODE_ROW && col === START_NODE_COL,
             isFinish: row === END_NODE_ROW && col === END_NODE_COL,
@@ -116,10 +117,8 @@ class PathFindingVisualizer extends Component {
         const startNode = grid[START_NODE_ROW][START_NODE_COL];
         const finishNode = grid[END_NODE_ROW][END_NODE_COL];
         const visitedNodesInOrder = aStarSearch(grid, startNode, finishNode);
-        console.log(visitedNodesInOrder);
-        // const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-        // console.log(nodesInShortestPathOrder);
-        // this.animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, 30);
+        const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+        this.animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, 30);
     }
 
     animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, speed) {
