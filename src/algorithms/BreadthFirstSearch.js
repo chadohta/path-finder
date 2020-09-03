@@ -1,4 +1,4 @@
-import { getUnvisitedNeighbors } from './Dijkstras';
+import { getNeighbors } from '../algorithms/helper-functions';
 
 export function bfs(grid, startNode, finishNode) {
     let queue = [];
@@ -8,14 +8,13 @@ export function bfs(grid, startNode, finishNode) {
     const visitedNodesInOrder = [];
 
     while (queue.length > 0) {
-        let currentNode = queue.shift();
-
-        // skip node if it's a wall
-        if (currentNode.isWall) continue;
+        const currentNode = queue.shift();
         
         visitedNodesInOrder.push(currentNode);
         if (currentNode === finishNode) return visitedNodesInOrder;
-        const unvisitedNeighbors = getUnvisitedNeighbors(currentNode, grid);
+
+        const neighbors = getNeighbors(currentNode, grid);
+        const unvisitedNeighbors = neighbors.filter(neighbor => !neighbor.isVisited);
         for (const neighbor of unvisitedNeighbors) {
             neighbor.isVisited = true;
             neighbor.previousNode = currentNode;

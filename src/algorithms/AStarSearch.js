@@ -1,3 +1,5 @@
+import { getNeighbors, getManhattanDistance } from '../algorithms/helper-functions';
+
 export function aStarSearch(grid, startNode, finishNode) {
     const visitedNodesInOrder = [];
     const pQueue = [];
@@ -13,19 +15,12 @@ export function aStarSearch(grid, startNode, finishNode) {
 
         visitedNodesInOrder.push(currentNode);
         if (currentNode === finishNode) return visitedNodesInOrder;
-
-        updateNeighbors(currentNode, grid, startNode, finishNode, pQueue);
+        updateNeighbors(currentNode, grid, finishNode, pQueue);
     }
     return visitedNodesInOrder; // trapped by walls, no path available
 }
 
-function getManhattanDistance(nodeA, nodeB) {
-    const dx = Math.abs(nodeA.col - nodeB.col);
-    const dy = Math.abs(nodeA.row - nodeB.row);
-    return (dx + dy);
-}
-
-function updateNeighbors(node, grid, startNode, finishNode, pQueue) {
+function updateNeighbors(node, grid, finishNode, pQueue) {
     const neighbors = getNeighbors(node, grid);
     for (const neighbor of neighbors) { 
         const temp = node.distance + 1;
@@ -38,14 +33,4 @@ function updateNeighbors(node, grid, startNode, finishNode, pQueue) {
             }
         }
     }
-}
-
-export function getNeighbors(node, grid) {
-    const neighbors = [];
-    const { col, row } = node;
-    if (row > 0) neighbors.push(grid[row - 1][col]); //up one
-    if (row < grid.length - 1) neighbors.push(grid[row + 1][col]); // down one
-    if (col > 0) neighbors.push(grid[row][col - 1]); // left one
-    if (col < grid[0].length - 1) neighbors.push(grid[row][col + 1]); // right one
-    return neighbors.filter(neighbor => !neighbor.isWall); // filter out walls
 }

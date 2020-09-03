@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import '../styles/PathFindingVisualizer.css';
 import GridNode from './GridNode'
-import { dijkstra, getNodesInShortestPathOrder } from '../algorithms/Dijkstras';
-import { dfs } from '../algorithms/DepthFirstSearch';
-import { bfs } from '../algorithms/BreadthFirstSearch';
+import { dijkstra } from '../algorithms/Dijkstras';
 import { greedySearch } from '../algorithms/GreedySearch';
 import { aStarSearch } from '../algorithms/AStarSearch';
+import { bfs } from '../algorithms/BreadthFirstSearch';
+import { dfs } from '../algorithms/DepthFirstSearch';
+import { getNodesInPathOrder } from '../algorithms/helper-functions';
 
-const START_NODE_ROW = 5;
-const START_NODE_COL = 5;
+const START_NODE_ROW = 4;
+const START_NODE_COL = 4;
 const END_NODE_ROW = 15;
 const END_NODE_COL = 35;
 
@@ -75,50 +76,77 @@ class PathFindingVisualizer extends Component {
         newGrid[row][col] = newNode;
         return newGrid;
     };
-    
+
+    lockButtons() { 
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach((button) => {
+            button.disabled = true;
+        });
+    }
+
+    unlockSearchButtons() { 
+        const buttons = document.querySelectorAll('.searchBtn');
+        buttons.forEach((button) => {
+            button.disabled = false;
+        });
+    }
+
+    unlockResetButtons() {
+        const buttons = document.querySelectorAll('.resetBtn');
+        buttons.forEach((button) => {
+            button.disabled = false;
+        });
+    }
+
     visualizeDijkstra() {
+        this.lockButtons();
         const { grid } = this.state;
         const startNode = grid[START_NODE_ROW][START_NODE_COL];
         const finishNode = grid[END_NODE_ROW][END_NODE_COL];
         const visitedNodesInOrder = dijkstra(grid, startNode, finishNode);
-        console.log(visitedNodesInOrder);
-        const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+        const nodesInShortestPathOrder = getNodesInPathOrder(finishNode);
         this.animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, 30);
-    }
-
-    visualizeBFS() {
-        const { grid } = this.state;
-        const startNode = grid[START_NODE_ROW][START_NODE_COL];
-        const finishNode = grid[END_NODE_ROW][END_NODE_COL];
-        const visitedNodesInOrder = bfs(grid, startNode, finishNode);
-        const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-        this.animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, 30);
-    }
-
-    visualizeDFS() {
-        const { grid } = this.state;
-        const startNode = grid[START_NODE_ROW][START_NODE_COL];
-        const finishNode = grid[END_NODE_ROW][END_NODE_COL];
-        const nodesInPathOrder = dfs(grid, startNode, finishNode);
-        this.animateExploration(nodesInPathOrder, nodesInPathOrder, 10);
+        console.log(grid);
     }
 
     visualizeGreedy() {
+        this.lockButtons();
         const { grid } = this.state;
         const startNode = grid[START_NODE_ROW][START_NODE_COL];
         const finishNode = grid[END_NODE_ROW][END_NODE_COL];
         const visitedNodesInOrder = greedySearch(grid, startNode, finishNode);
-        const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
-        this.animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, 30);
+        const nodesInPathOrder = getNodesInPathOrder(finishNode);
+        this.animateExploration(visitedNodesInOrder, nodesInPathOrder, 30);
     }
 
     visualizeAStar() {
+        this.lockButtons();
         const { grid } = this.state;
         const startNode = grid[START_NODE_ROW][START_NODE_COL];
         const finishNode = grid[END_NODE_ROW][END_NODE_COL];
         const visitedNodesInOrder = aStarSearch(grid, startNode, finishNode);
-        const nodesInShortestPathOrder = getNodesInShortestPathOrder(finishNode);
+        const nodesInShortestPathOrder = getNodesInPathOrder(finishNode);
         this.animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, 30);
+    }
+
+    visualizeBFS() {
+        this.lockButtons();
+        const { grid } = this.state;
+        const startNode = grid[START_NODE_ROW][START_NODE_COL];
+        const finishNode = grid[END_NODE_ROW][END_NODE_COL];
+        const visitedNodesInOrder = bfs(grid, startNode, finishNode);
+        const nodesInShortestPathOrder = getNodesInPathOrder(finishNode);
+        this.animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, 30);
+    }
+
+    visualizeDFS() {
+        this.lockButtons();
+        const { grid } = this.state;
+        const startNode = grid[START_NODE_ROW][START_NODE_COL];
+        const finishNode = grid[END_NODE_ROW][END_NODE_COL];
+        const visitedNodesInOrder = dfs(grid, startNode, finishNode);
+        const nodesInPathOrder = getNodesInPathOrder(finishNode);
+        this.animateExploration(visitedNodesInOrder, nodesInPathOrder, 30);
     }
 
     animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, speed) {
@@ -145,10 +173,40 @@ class PathFindingVisualizer extends Component {
                     'node node-path';
             }, speed * i);
         }
+        setTimeout(() => {
+            this.unlockResetButtons();
+        }, speed * nodesInPathOrder.length);
     }
 
     resetGrid() { 
         this.createGrid();
+        // need a delay for the new grid to be set in state
+        setTimeout(() => {
+            this.resetNodeColor();
+        }, 250);
+    }
+
+    resetGridKeepWalls() { 
+        const { grid } = this.state;
+        const newGrid = grid.slice();
+        for (let row = 0; row < newGrid.length; row++) {
+            for(let col = 0; col < newGrid[0].length; col++) {
+                const node = newGrid[row][col];
+                const newNode = {
+                    ...node,
+                    distance: Infinity,
+                    fScore: Infinity,
+                    previousNode: null,
+                    isVisited: false
+                }
+                newGrid[row][col] = newNode;
+            }
+        }
+        this.setState({ grid: newGrid });
+        this.resetNodeColor();
+    }
+
+    resetNodeColor() { 
         const allNodes = [];
         for (const row of this.state.grid) {
             for (const node of row) {
@@ -161,15 +219,21 @@ class PathFindingVisualizer extends Component {
                 if (node.isStart) {
                     document.getElementById(`node-${node.row}-${node.col}`).className =
                         'node node-start';
-                } else if (node.isFinish) { 
+                } else if (node.isFinish) {
                     document.getElementById(`node-${node.row}-${node.col}`).className =
                         'node node-finish';
-                } else { 
+                } else if (node.isWall) { 
+                    document.getElementById(`node-${node.row}-${node.col}`).className =
+                        'node node-wall';
+                } else {
                     document.getElementById(`node-${node.row}-${node.col}`).className =
                         'node';
                 }
             }, 1 * i);
         }
+        setTimeout(() => {
+            this.unlockSearchButtons();
+        }, allNodes.length);
     }
 
     render() { 
@@ -177,23 +241,26 @@ class PathFindingVisualizer extends Component {
 
         return ( 
             <div>
-                <button onClick={() => this.visualizeDijkstra()}>
+                <button className="searchBtn" onClick={() => this.visualizeDijkstra()}>
                     Dijkstra's Algorithm
                 </button>
-                <button onClick={() => this.visualizeGreedy()}>
+                <button className="searchBtn" onClick={() => this.visualizeGreedy()}>
                     Greedy Search
                 </button>
-                <button onClick={() => this.visualizeAStar()}>
+                <button className="searchBtn" onClick={() => this.visualizeAStar()}>
                     A-Star Search
                 </button>
-                <button onClick={() => this.visualizeDFS()}>
-                    Depth-First Search
-                </button>
-                <button onClick={() => this.visualizeBFS()}>
+                <button className="searchBtn" onClick={() => this.visualizeBFS()}>
                     Breadth-First Search
+                </button>
+                <button className="searchBtn" onClick={() => this.visualizeDFS()}>
+                    Depth-First Search
                 </button>
                 <button className="resetBtn" onClick={() => this.resetGrid()}>
                     Reset Grid
+                </button>
+                <button id="resetBtnTwo" className="resetBtn" onClick={() => this.resetGridKeepWalls()}>
+                    Reset Grid Keep Walls
                 </button>
                 <div className="grid">
                     {grid.map((row, rIndex) => {
