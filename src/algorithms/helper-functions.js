@@ -1,3 +1,4 @@
+// gets all nodes within grid and returns as array
 export function getAllNodes(grid) {
     const nodes = [];
     for (const row of grid) {
@@ -8,6 +9,7 @@ export function getAllNodes(grid) {
     return nodes;
 }
 
+// gets all neighbors of passed node (excluiding nodes that are walls) and returns as array
 export function getNeighbors(node, grid) {
     const neighbors = [];
     const { col, row } = node;
@@ -30,6 +32,7 @@ export function getNodesInPathOrder(finishNode) {
     return nodesInPathOrder;
 }
 
+// returns manhattan distance between two nodes
 export function getManhattanDistance(nodeA, nodeB) {
     const dx = Math.abs(nodeA.col - nodeB.col);
     const dy = Math.abs(nodeA.row - nodeB.row);
