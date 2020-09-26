@@ -7,6 +7,7 @@ import { aStarSearch } from '../algorithms/AStarSearch';
 import { bfs } from '../algorithms/BreadthFirstSearch';
 import { dfs } from '../algorithms/DepthFirstSearch';
 import { getNodesInPathOrder } from '../algorithms/helper-functions';
+import Instructions from './instructions.jsx'
 
 const START_NODE_ROW = 4;
 const START_NODE_COL = 4;
@@ -150,8 +151,8 @@ class PathFindingVisualizer extends Component {
     }
 
     animateExploration(visitedNodesInOrder, nodesInShortestPathOrder, speed) {
-        for (let i = 0; i <= visitedNodesInOrder.length; i++) {
-            if (i === visitedNodesInOrder.length) {
+        for (let i = 1; i <= visitedNodesInOrder.length - 1; i++) {
+            if (i === visitedNodesInOrder.length - 1) {
                 setTimeout(() => {
                     this.animatePath(nodesInShortestPathOrder, speed);
                 }, 10 * i);
@@ -166,7 +167,7 @@ class PathFindingVisualizer extends Component {
     }
 
     animatePath(nodesInPathOrder, speed) {
-        for (let i = 0; i < nodesInPathOrder.length; i++) {
+        for (let i = 1; i < nodesInPathOrder.length - 1; i++) {
             setTimeout(() => {
                 const node = nodesInPathOrder[i];
                 document.getElementById(`node-${node.row}-${node.col}`).className =
@@ -241,26 +242,21 @@ class PathFindingVisualizer extends Component {
 
         return ( 
             <div>
+                <h1> Pathfinding Visualizer </h1> 
+                <button className="searchBtn" onClick={() => this.visualizeDFS()}>
+                    Depth-First Search
+                </button>
+                <button className="searchBtn" onClick={() => this.visualizeBFS()}>
+                    Breadth-First Search
+                </button>
                 <button className="searchBtn" onClick={() => this.visualizeDijkstra()}>
                     Dijkstra's Algorithm
                 </button>
                 <button className="searchBtn" onClick={() => this.visualizeGreedy()}>
                     Greedy Search
                 </button>
-                <button className="searchBtn" onClick={() => this.visualizeAStar()}>
+                <button id="aStarBtn" className="searchBtn" onClick={() => this.visualizeAStar()}>
                     A-Star Search
-                </button>
-                <button className="searchBtn" onClick={() => this.visualizeBFS()}>
-                    Breadth-First Search
-                </button>
-                <button className="searchBtn" onClick={() => this.visualizeDFS()}>
-                    Depth-First Search
-                </button>
-                <button className="resetBtn" onClick={() => this.resetGrid()}>
-                    Reset Grid
-                </button>
-                <button id="resetBtnTwo" className="resetBtn" onClick={() => this.resetGridKeepWalls()}>
-                    Reset Grid Keep Walls
                 </button>
                 <div className="grid">
                     {grid.map((row, rIndex) => {
@@ -286,6 +282,22 @@ class PathFindingVisualizer extends Component {
                             </div>
                         );
                     })}
+                </div>
+
+                <button className="resetBtn" onClick={() => this.resetGrid()}>
+                    Reset Grid
+                </button>
+                <button id="resetBtnTwo" className="resetBtn" onClick={() => this.resetGridKeepWalls()}>
+                    Reset Grid Keep Walls
+                </button>
+
+                <p style={{fontStyle: "italic"}}>
+                    Add walls by clicking and holding down your left mouse button while
+                    moving it around the grid. To clear a wall left-click it.
+                </p>
+                
+                <div className="instruction-wrapper">
+                    <Instructions />
                 </div>
             </div>
         );

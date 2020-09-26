@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Mukta:wght@300&display=swap');
+
+p { 
+    font-family: 'Mukta',
+    sans-serif;
+}
+
+h2 {
+    margin-top: 0px;
+    padding: 20px 0px 0px 0px;
+}
+
+.alg-description-1 {
+    display: inline-block;
+    width: 87%;
+    background-color: white;
+    padding: 0px 5px 5px 5px;
+    outline: 1px solid rgba(221, 221, 221);
+    margin: 0px 5% 30px 5%;
+}
+
+p.alg-des { 
+    padding: 0px 20px 0px 20px;
+}
+
+p.alg-des-italic { 
+    font-style: italic;
+}

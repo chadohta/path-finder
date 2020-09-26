@@ -1,16 +1,22 @@
 .node {
     width: 20px;
     height: 20px;
-    outline: 1px solid rgb(221, 221, 221);
+    outline: 1px solid rgba(221, 221, 221);
     display: inline-block;
 }
 
 .node-start {
-    background-color: rgb(30, 199, 221);
+    background-color: rgb(255, 215, 0);
+    background-image: url('../assets/imgs/start.png');
+    background-position: center;
+    background-size: cover;
 }
 
 .node-finish {
     background-color: rgb(236, 77, 77);
+    background-image: url('../assets/imgs/target.png');
+    background-position: center;
+    background-size: cover;
 }
 
 .node-wall {
@@ -46,7 +52,7 @@
 
     100% {
         transform: scale(1);
-        background-color: rgba(0, 188, 237, 0.75);
+        background-color: rgba(30, 199, 221);
     }
 }
 
