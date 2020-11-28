@@ -7,7 +7,7 @@ import { aStarSearch } from '../algorithms/AStarSearch';
 import { bfs } from '../algorithms/BreadthFirstSearch';
 import { dfs } from '../algorithms/DepthFirstSearch';
 import { getNodesInPathOrder } from '../algorithms/helper-functions';
-import Instructions from './instructions.jsx'
+import Instructions from './Instructions.jsx'
 
 const START_NODE_ROW = 4;
 const START_NODE_COL = 4;
