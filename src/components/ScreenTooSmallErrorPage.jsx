@@ -10,7 +10,7 @@ const ScreenTooSmallErrorPage = () => {
     return (
         <p style={errorContentStyle}>
             Thanks for checking out my path-finding web app! Unfortunately it is
-            not optimized for mobile so please view on desktop when you get the
+            not optimized for mobile so please view it on desktop when you get the
             chance 😄
         </p>
     );
