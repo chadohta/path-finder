@@ -1,6 +1,6 @@
 import { getAllNodes, getNeighbors } from '../algorithms/helper-functions';
 
-export function dijkstra(grid, startNode, finishNode) {
+export const dijkstra = (grid, startNode, finishNode) => {
     const visitedNodesInOrder = [];
     startNode.distance = 0;
     const unvisitedNodes = getAllNodes(grid);
@@ -20,7 +20,7 @@ export function dijkstra(grid, startNode, finishNode) {
     }
 }
 
-function updateUnvisitedNeighbors(node, grid) {
+const updateUnvisitedNeighbors = (node, grid) => {
     const neighbors = getNeighbors(node, grid);
     const unvisitedNeighbors = neighbors.filter(neighbor => !neighbor.isVisited);
     for (const neighbor of unvisitedNeighbors) {

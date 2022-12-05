@@ -1,5 +1,5 @@
 // gets all nodes within grid and returns as array
-export function getAllNodes(grid) {
+export const getAllNodes = (grid) => {
     const nodes = [];
     for (const row of grid) {
         for (const node of row) {
@@ -10,7 +10,7 @@ export function getAllNodes(grid) {
 }
 
 // gets all neighbors of passed node (excluiding nodes that are walls) and returns as array
-export function getNeighbors(node, grid) {
+export const getNeighbors = (node, grid) => {
     const neighbors = [];
     const { col, row } = node;
     if (col > 0) neighbors.push(grid[row][col - 1]); // left one
@@ -22,7 +22,7 @@ export function getNeighbors(node, grid) {
 }
 
 // backtracks from the finishNode to construct the path that was found
-export function getNodesInPathOrder(finishNode) {
+export const getNodesInPathOrder = (finishNode) => {
     const nodesInPathOrder = [];
     let currentNode = finishNode;
     while (currentNode !== null) {
@@ -33,7 +33,7 @@ export function getNodesInPathOrder(finishNode) {
 }
 
 // returns manhattan distance between two nodes
-export function getManhattanDistance(nodeA, nodeB) {
+export const getManhattanDistance = (nodeA, nodeB) => {
     const dx = Math.abs(nodeA.col - nodeB.col);
     const dy = Math.abs(nodeA.row - nodeB.row);
     return (dx + dy);

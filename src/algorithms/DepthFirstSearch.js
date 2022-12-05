@@ -1,6 +1,6 @@
 import { getNeighbors } from '../algorithms/helper-functions';
 
-export function dfs(grid, startNode, finishNode) {
+export const dfs = (grid, startNode, finishNode) => {
     const stack = [];
     const visitedNodesInOrder = [];
 

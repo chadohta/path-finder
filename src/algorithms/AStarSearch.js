@@ -1,6 +1,6 @@
 import { getNeighbors, getManhattanDistance } from '../algorithms/helper-functions';
 
-export function aStarSearch(grid, startNode, finishNode) {
+export const aStarSearch = (grid, startNode, finishNode) => {
     const visitedNodesInOrder = [];
     const pQueue = [];
     
@@ -20,7 +20,7 @@ export function aStarSearch(grid, startNode, finishNode) {
     return visitedNodesInOrder; // trapped by walls, no path available
 }
 
-function updateNeighbors(node, grid, finishNode, pQueue) {
+const updateNeighbors = (node, grid, finishNode, pQueue) => {
     const neighbors = getNeighbors(node, grid);
     for (const neighbor of neighbors) { 
         const temp = node.distance + 1;

@@ -1,6 +1,6 @@
 import { getNeighbors } from '../algorithms/helper-functions';
 
-export function bfs(grid, startNode, finishNode) {
+export const bfs = (grid, startNode, finishNode) => {
     let queue = [];
     queue.push(startNode);
     startNode.isVisited = true;

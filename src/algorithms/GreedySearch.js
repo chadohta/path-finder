@@ -1,6 +1,6 @@
 import { getAllNodes, getNeighbors, getManhattanDistance } from '../algorithms/helper-functions';
 
-export function greedySearch(grid, startNode, finishNode) {
+export const greedySearch = (grid, startNode, finishNode) => {
     const visitedNodesInOrder = [];
     const unvisitedNodes = getAllNodes(grid);
 
@@ -21,7 +21,7 @@ export function greedySearch(grid, startNode, finishNode) {
     }
 }
 
-function updateUnvisitedNeighbors(node, grid, finishNode) {    
+const updateUnvisitedNeighbors = (node, grid, finishNode) => {    
     const neighbors = getNeighbors(node, grid);
     const unvisitedNeighbors = neighbors.filter(neighbor => !neighbor.isVisited);
     for (const neighbor of unvisitedNeighbors) {
