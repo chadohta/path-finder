@@ -9,7 +9,7 @@ class Instuctions extends Component {
                 <h2> What is Pathfinding? </h2>
                 <p>
                     This application visualizes various pathfinding algorithms. 
-                    A pathfinding algorithm is essentially trying to find
+                    A pathfinding algorithm is trying to find
                     the shortest path between two points. While some algorithms
                     are guaranteed to find the shortest possible path, others are not. 
                     Below are descriptions of each algorithm implemented in this
@@ -62,7 +62,7 @@ class Instuctions extends Component {
                     <p className="alg-des-italic"> weighted </p>
                     <p className="alg-des">
                         Uses a heuristic function to estimate the cost of the cheapest path
-                        from start node to destination node. Essentially, it will explore
+                        from start node to destination node. It will explore
                         neighbors and continuously move to the node that is closest to the
                         destination node. This does not always lead to the optimal path.
                     </p>
